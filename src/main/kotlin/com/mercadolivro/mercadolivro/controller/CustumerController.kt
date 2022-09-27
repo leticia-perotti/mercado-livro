@@ -3,6 +3,7 @@ package com.mercadolivro.mercadolivro.controller
 import com.mercadolivro.mercadolivro.controller.request.PostCostumerRequest
 import com.mercadolivro.mercadolivro.controller.request.PutCostumerRequest
 import com.mercadolivro.mercadolivro.model.CostumerModel
+import com.mercadolivro.mercadolivro.service.CostumerService
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -11,18 +12,21 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("customer")
-class CustumerController {
-
-    val costumers = mutableListOf<CostumerModel>()
+class CustumerController(
+    private val costumerService: CostumerService
+    ) {
 
     @GetMapping
-    fun getAll(): List<CostumerModel> {
-        return costumers
+    fun getAll(
+        @RequestParam name: String?
+    ): List<CostumerModel> {
+        costumerService.getAll(name)
     }
 
     @PostMapping
