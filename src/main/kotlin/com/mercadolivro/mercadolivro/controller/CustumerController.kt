@@ -2,6 +2,7 @@ package com.mercadolivro.mercadolivro.controller
 
 import com.mercadolivro.mercadolivro.controller.request.PostCostumerRequest
 import com.mercadolivro.mercadolivro.controller.request.PutCostumerRequest
+import com.mercadolivro.mercadolivro.extension.toCostumerModel
 import com.mercadolivro.mercadolivro.model.CostumerModel
 import com.mercadolivro.mercadolivro.service.CostumerService
 import org.springframework.http.HttpStatus
@@ -26,27 +27,22 @@ class CustumerController(
     fun getAll(
         @RequestParam name: String?
     ): List<CostumerModel> {
-        costumerService.getAll(name)
+        return costumerService.getAll(name)
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     fun crateCostumer(
-        @RequestBody custumer: PostCostumerRequest
+        @RequestBody costumer: PostCostumerRequest
     ) {
-        val id = if(costumers.isEmpty()) 1 else costumers.last().id.toInt() + 1
-        costumers.add(CostumerModel(
-            id = id.toString(),
-            name = custumer.name,
-            email = custumer.email
-        ))
+        costumerService.create(costumer.toCostumerModel())
     }
 
     @GetMapping("/{id}")
     fun getCostumer(
         @PathVariable id: String
     ): CostumerModel{
-        return costumers.filter { it.id == id }.first()
+        return costumerService.returnById(id)
     }
 
     @PutMapping("/{id}")
@@ -55,10 +51,7 @@ class CustumerController(
         @PathVariable id: String,
         @RequestBody costumer: PutCostumerRequest
     ){
-        costumers.filter { it.id == id }.first().let {
-            it.name  = costumer.name
-            it.email = costumer.email
-        }
+        costumerService.editCostumer(id, costumer)
     }
 
     @DeleteMapping("/{id}")
@@ -66,7 +59,7 @@ class CustumerController(
     fun deleteCostumer(
         @PathVariable id: String
     ){
-        costumers.removeIf{it.id == id}
+        costumerService.deleteCostumer(id)
     }
 
 }
