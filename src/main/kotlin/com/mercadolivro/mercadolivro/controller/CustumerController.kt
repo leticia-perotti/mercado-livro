@@ -51,7 +51,7 @@ class CustumerController(
         @PathVariable id: String,
         @RequestBody costumer: PutCostumerRequest
     ){
-        costumerService.editCostumer(id, costumer)
+        costumerService.editCostumer(costumer.toCostumerModel(id))
     }
 
     @DeleteMapping("/{id}")

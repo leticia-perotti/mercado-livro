@@ -17,20 +17,16 @@ class CostumerService {
     }
 
     fun create(costumer: CostumerModel) {
-        val id = if(costumers.isEmpty()) 1 else costumers.last().id + 1
-        costumers.add(CostumerModel(
-            id = id.toString(),
-            name = costumer.name,
-            email = costumer.email
-        ))
+        costumer.id = if(costumers.isEmpty()) 1.toString() else costumers.last().id!! + 1
+        costumers.add(costumer)
     }
 
     fun returnById(id: String): CostumerModel {
         return costumers.filter { it.id == id }.first()
     }
 
-    fun editCostumer(id: String, costumer: PutCostumerRequest) {
-        costumers.filter { it.id == id }.first().let {
+    fun editCostumer(costumer: CostumerModel) {
+        costumers.filter { it.id == costumer.id }.first().let {
             it.name  = costumer.name
             it.email = costumer.email
         }
