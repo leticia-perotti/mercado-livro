@@ -40,7 +40,7 @@ class CustumerController(
 
     @GetMapping("/{id}")
     fun getCostumer(
-        @PathVariable id: String
+        @PathVariable id: Int
     ): CostumerModel{
         return costumerService.returnById(id)
     }
@@ -48,7 +48,7 @@ class CustumerController(
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun putCostumer(
-        @PathVariable id: String,
+        @PathVariable id: Int,
         @RequestBody costumer: PutCostumerRequest
     ){
         costumerService.editCostumer(costumer.toCostumerModel(id))
@@ -57,7 +57,7 @@ class CustumerController(
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deleteCostumer(
-        @PathVariable id: String
+        @PathVariable id: Int
     ){
         costumerService.deleteCostumer(id)
     }

@@ -12,6 +12,6 @@ fun String.primeiraLetra(): Char{
     return this.get(0)
 }
 
-fun PutCostumerRequest.toCostumerModel(id: String): CostumerModel{
+fun PutCostumerRequest.toCostumerModel(id: Int): CostumerModel{
     return CostumerModel(id, name, email)
 }
