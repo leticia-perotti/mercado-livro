@@ -1,22 +1,20 @@
 package com.mercadolivro.mercadolivro.service
 
-import com.mercadolivro.mercadolivro.controller.request.PostCostumerRequest
-import com.mercadolivro.mercadolivro.controller.request.PutCostumerRequest
 import com.mercadolivro.mercadolivro.model.CostumerModel
 import com.mercadolivro.mercadolivro.repository.CostumerRepository
 import org.springframework.stereotype.Service
+import java.lang.Exception
 
 @Service
 class CostumerService (
     private val costumerRepository: CostumerRepository
         ){
-    val costumers = mutableListOf<CostumerModel>()
 
     fun getAll(name: String?) : List<CostumerModel>{
         name?.let{
-            return costumers.filter { it.name.contains(name, ignoreCase = true) }
+            return costumerRepository.findByNameContaining(name)
         }
-        return costumers
+        return costumerRepository.findAll().toList()
     }
 
     fun create(costumer: CostumerModel) {
@@ -28,14 +26,17 @@ class CostumerService (
     }
 
     fun editCostumer(costumer: CostumerModel) {
-        costumers.filter { it.id == costumer.id }.first().let {
-            it.name  = costumer.name
-            it.email = costumer.email
+        if (!costumerRepository.existsById(costumer.id!!)){
+            throw Exception()
         }
+        costumerRepository.save(costumer)
     }
 
     fun deleteCostumer(id: Int) {
-        costumers.removeIf{it.id == id}
+        if (!costumerRepository.existsById(id)){
+            throw Exception()
+        }
+        costumerRepository.deleteById(id)
     }
 
 
