@@ -2,6 +2,7 @@ package com.mercadolivro.mercadolivro.controller
 
 import com.mercadolivro.mercadolivro.controller.request.PostBookRequest
 import com.mercadolivro.mercadolivro.extension.toBookModel
+import com.mercadolivro.mercadolivro.model.BookModel
 import com.mercadolivro.mercadolivro.service.BookService
 import com.mercadolivro.mercadolivro.service.CostumerService
 import org.springframework.http.HttpStatus
@@ -22,5 +23,15 @@ class BookController (
         val costumer = costumerService.returnById(request.costumerId)
 
         bookService.create(request.toBookModel(costumer))
+    }
+
+    @GetMapping
+    fun findAll(): List<BookModel>{
+        return  bookService.findAll()
+    }
+
+    @GetMapping("/ativos")
+    fun  findAtivos(): List<BookModel>{
+        return bookService.findAtives()
     }
 }
