@@ -1,11 +1,14 @@
 package com.mercadolivro.mercadolivro.model
 
 import com.mercadolivro.mercadolivro.enum.BookStatus
+import lombok.NoArgsConstructor
 import java.math.BigDecimal
 import javax.persistence.*
 import javax.persistence.Id
 
-@Entity(name = "book")
+@Entity
+@Table(name = "book")
+@NoArgsConstructor
 data class BookModel (
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,6 +29,5 @@ data class BookModel (
     var costumerId: CostumerModel? = null
 
 
-        ){
+)
 
-}
