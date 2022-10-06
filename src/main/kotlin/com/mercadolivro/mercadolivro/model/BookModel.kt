@@ -8,7 +8,6 @@ import javax.persistence.Id
 
 @Entity
 @Table(name = "book")
-@NoArgsConstructor
 data class BookModel (
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,5 +28,6 @@ data class BookModel (
     var costumerId: CostumerModel? = null
 
 
-)
+) {
+}
 
