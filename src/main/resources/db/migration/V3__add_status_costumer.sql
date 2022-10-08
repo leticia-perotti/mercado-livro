@@ -1,0 +1,1 @@
+ALTER table costumer add column status varchar(100);

@@ -1,5 +1,6 @@
 package com.mercadolivro.mercadolivro.service
 
+import com.mercadolivro.mercadolivro.enum.CostumerStatus
 import com.mercadolivro.mercadolivro.model.CostumerModel
 import com.mercadolivro.mercadolivro.repository.CostumerRepository
 import org.springframework.stereotype.Service
@@ -7,7 +8,8 @@ import java.lang.Exception
 
 @Service
 class CostumerService (
-    private val costumerRepository: CostumerRepository
+    val costumerRepository: CostumerRepository,
+    val bookService: BookService
         ){
 
     fun getAll(name: String?) : List<CostumerModel>{
@@ -33,10 +35,10 @@ class CostumerService (
     }
 
     fun deleteCostumer(id: Int) {
-        if (!costumerRepository.existsById(id)){
-            throw Exception()
-        }
-        costumerRepository.deleteById(id)
+        val costumer = returnById(id)
+        bookService.deleteByCostumer(costumer)
+        costumer.status = CostumerStatus.INATIVO
+        costumerRepository.save(costumer)
     }
 
 

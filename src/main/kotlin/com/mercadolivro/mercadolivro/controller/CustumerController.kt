@@ -51,7 +51,8 @@ class CustumerController(
         @PathVariable id: Int,
         @RequestBody costumer: PutCostumerRequest
     ){
-        costumerService.editCostumer(costumer.toCostumerModel(id))
+        val costumerSaved = costumerService.returnById(id)
+        costumerService.editCostumer(costumer.toCostumerModel(costumerSaved))
     }
 
     @DeleteMapping("/{id}")
