@@ -8,10 +8,10 @@ import com.mercadolivro.mercadolivro.extension.toResponse
 import com.mercadolivro.mercadolivro.service.BookService
 import com.mercadolivro.mercadolivro.service.CostumerService
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
-import java.awt.print.Pageable
 
 @RestController
 @RequestMapping("book")
