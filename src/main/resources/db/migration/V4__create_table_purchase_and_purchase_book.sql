@@ -4,7 +4,7 @@ create table purchase(
     nfe varchar(255),
     price decimal(15,2) not null,
     created_at DATETIME not null,
-    foreign key (costumer_id) references costumer(id)
+    FOREIGN KEY (costumer_id) references costumer(id)
 );
 create table purchase_book(
     purchase_id int not null,
