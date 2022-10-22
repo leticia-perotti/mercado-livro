@@ -1,0 +1,1 @@
+alter table costumer add column password varchar(255);

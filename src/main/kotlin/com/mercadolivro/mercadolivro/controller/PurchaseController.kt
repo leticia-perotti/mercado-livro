@@ -20,4 +20,12 @@ class PurchaseController (
     fun purchase (@RequestBody request: PostPurchaseRequest){
         purchaseService.create(purchaseMapper.toModel(request))
     }
+
+    //VALIDAR LIVROS VENDIDOS E N VENDE-LOS NOVAMENTE
+
+    //LISTAR VENDAR
+
+    //RETORNAR VENDA POR ID
+
+    //LISTAR LIVROS VENDIDOS
 }
