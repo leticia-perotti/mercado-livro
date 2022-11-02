@@ -8,6 +8,7 @@ import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import javax.servlet.FilterChain
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
@@ -28,8 +29,20 @@ class AuthenticationFilter(
             return authenticationManager.authenticate(authToken)
         }catch (ex: Exception){
             throw AuthenticationException("falha autenticação", "999")
+
         }
 
+    }
+
+    override fun successfulAuthentication(
+        request: HttpServletRequest,
+        response: HttpServletResponse,
+        chain: FilterChain,
+        authResult: Authentication
+    ) {
+        val id = (authResult.principal as UserCostumerDetails).id
+
+        response.addHeader("Authorization", "123456")
     }
 
 }

@@ -1,7 +1,7 @@
 package com.mercadolivro.mercadolivro.model
 
 import com.mercadolivro.mercadolivro.enum.CostumerStatus
-import com.mercadolivro.mercadolivro.enum.Profile
+import com.mercadolivro.mercadolivro.enum.Role
 import javax.persistence.*
 
 @Entity
@@ -26,9 +26,9 @@ data class CostumerModel(
 
     @Column(name ="role")
     @Enumerated(EnumType.STRING)
-    @ElementCollection(targetClass = Profile::class, fetch = FetchType.EAGER)
+    @ElementCollection(targetClass = Role::class, fetch = FetchType.EAGER)
     @CollectionTable(name = "costumer_roles",
         joinColumns = [JoinColumn(name = "costumer_id")])
-    val roles: Set<Profile> = setOf()
+    val roles: Set<Role> = setOf()
 ) {
 }
