@@ -1,5 +1,6 @@
 package com.mercadolivro.mercadolivro.config
 
+import com.mercadolivro.mercadolivro.enum.Role
 import com.mercadolivro.mercadolivro.repository.CostumerRepository
 import com.mercadolivro.mercadolivro.security.AuthenticationFilter
 import com.mercadolivro.mercadolivro.security.AuthorizationFilter
@@ -28,6 +29,10 @@ class SecurityConfig(
         "/customer"
     )
 
+    private val ADMIN_MATCHERS = arrayOf(
+        "/admin/**"
+    )
+
     override fun configure(auth: AuthenticationManagerBuilder) {
         auth.userDetailsService(userDetails).passwordEncoder(BCryptPasswordEncoder())
     }
@@ -36,6 +41,7 @@ class SecurityConfig(
         http.cors().and().csrf().disable()
         http.authorizeHttpRequests()
             .antMatchers(HttpMethod.POST, *publicPostMatchers).permitAll()
+            .antMatchers(*ADMIN_MATCHERS).hasAuthority(Role.ADMIN.description)
             .anyRequest().authenticated()
         http.addFilter(AuthenticationFilter(authenticationManager(), costumerRepository, jwtUtil))
         http.addFilter(AuthorizationFilter(authenticationManager(), jwtUtil, userDetails))
