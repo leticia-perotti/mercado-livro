@@ -6,8 +6,10 @@ import com.mercadolivro.mercadolivro.controller.response.CostumerResponse
 import com.mercadolivro.mercadolivro.extension.toCostumerModel
 import com.mercadolivro.mercadolivro.extension.toResponse
 import com.mercadolivro.mercadolivro.model.CostumerModel
+import com.mercadolivro.mercadolivro.security.UserCanOnlyAcessThierOwnResource
 import com.mercadolivro.mercadolivro.service.CostumerService
 import org.springframework.http.HttpStatus
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -42,6 +44,7 @@ class CustumerController(
     }
 
     @GetMapping("/{id}")
+    @UserCanOnlyAcessThierOwnResource
     fun getCostumer(
         @PathVariable id: Int
     ): CostumerResponse{

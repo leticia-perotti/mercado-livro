@@ -36,7 +36,7 @@ class AuthorizationFilter(
         val subject = jwtUtil.getSubject(token)
         val costumer = userDetailCostumerService.loadUserByUsername(subject)
 
-        return UsernamePasswordAuthenticationToken(subject, null, costumer.authorities )
+        return UsernamePasswordAuthenticationToken(costumer, null, costumer.authorities )
 
     }
 
