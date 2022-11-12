@@ -1,6 +1,7 @@
 package com.mercadolivro.mercadolivro.enum
 
 enum class Errors(val code: String, val message: String) {
+    ML000("ML-000", "Unauthorized"),
     ML001("ML-001", "Invalid request"),
 
     ML101("ML-101", "Book [%s] not exist"),

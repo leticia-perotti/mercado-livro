@@ -12,7 +12,7 @@ import java.lang.Exception
 import java.net.http.HttpRequest
 
 @ControllerAdvice
-class ControllerAdvice {
+class  ControllerAdvice {
 
     @ExceptionHandler(NotFoundException::class)
     fun handleNotFoundException(ex: NotFoundException, request: HttpRequest): ResponseEntity<ErrorResponse>{
@@ -48,4 +48,16 @@ class ControllerAdvice {
         )
         return ResponseEntity(erro, HttpStatus.UNPROCESSABLE_ENTITY)
     }
+
+    @ExceptionHandler(AccessDeniedException::class)
+    fun handleNotFoundException(ex: NotFoundException, request: HttpRequest): ResponseEntity<ErrorResponse>{
+        val erro = ErrorResponse(
+            HttpStatus.NOT_FOUND.value(),
+            ex.message,
+            ex.errorCode,
+            null
+        )
+        return ResponseEntity(erro, HttpStatus.NOT_FOUND)
+    }
+
 }

@@ -2,6 +2,7 @@ package com.mercadolivro.mercadolivro.security
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.mercadolivro.mercadolivro.controller.request.LoginRequest
+import com.mercadolivro.mercadolivro.enum.Errors
 import com.mercadolivro.mercadolivro.exception.AuthenticationException
 import com.mercadolivro.mercadolivro.repository.CostumerRepository
 import org.springframework.security.authentication.AuthenticationManager
@@ -29,7 +30,7 @@ class AuthenticationFilter(
 
             return authenticationManager.authenticate(authToken)
         }catch (ex: Exception){
-            throw AuthenticationException("falha autenticação", "999")
+            throw AuthenticationException(Errors.ML000.message, Errors.ML000.code)
 
         }
 
