@@ -12,8 +12,8 @@ import java.lang.Exception
 
 @Service
 class CostumerService (
-    val costumerRepository: CostumerRepository,
-    val bookService: BookService,
+    private val costumerRepository: CostumerRepository,
+    private val bookService: BookService,
     private val bCrypt: BCryptPasswordEncoder
         ){
 

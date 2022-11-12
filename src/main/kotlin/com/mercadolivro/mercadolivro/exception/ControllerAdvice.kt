@@ -50,11 +50,11 @@ class  ControllerAdvice {
     }
 
     @ExceptionHandler(AccessDeniedException::class)
-    fun handleNotFoundException(ex: NotFoundException, request: HttpRequest): ResponseEntity<ErrorResponse>{
+    fun handleAccessDeniedException(ex: AccessDeniedException, request: HttpRequest): ResponseEntity<ErrorResponse>{
         val erro = ErrorResponse(
-            HttpStatus.NOT_FOUND.value(),
-            ex.message,
-            ex.errorCode,
+            HttpStatus.FORBIDDEN.value(),
+            Errors.ML000.message,
+            Errors.ML000.code,
             null
         )
         return ResponseEntity(erro, HttpStatus.NOT_FOUND)
