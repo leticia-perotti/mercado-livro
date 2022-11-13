@@ -1,8 +1,10 @@
 package com.mercadolivro.service
 
 import com.mercadolivro.mercadolivro.enum.CostumerStatus
+import com.mercadolivro.mercadolivro.enum.Errors
 import com.mercadolivro.mercadolivro.enum.Role
 import com.mercadolivro.mercadolivro.exception.NotFoundException
+import com.mercadolivro.mercadolivro.helper.buildCustomer
 import com.mercadolivro.mercadolivro.model.CostumerModel
 import com.mercadolivro.mercadolivro.repository.CostumerRepository
 import com.mercadolivro.mercadolivro.service.BookService
@@ -30,6 +32,7 @@ class CostumerServiceTest {
     private lateinit var bCrypt: BCryptPasswordEncoder
 
     @InjectMockKs
+    @SpyK
     private lateinit var customerService: CostumerService
 
     @Test
@@ -66,20 +69,6 @@ class CostumerServiceTest {
         verify(exactly = 0){customerRepository.findByNameContaining(("Gustavo"))}
     }
 
-    fun buildCustomer(
-        id: Int? = null,
-        name: String = "customer name",
-        email: String = "${UUID.randomUUID()}@email.com",
-        password: String = "password"
-    ) = CostumerModel(
-        id = id,
-        name = name,
-        email = email,
-        status = CostumerStatus.ATIVO,
-        password = password,
-        roles = setOf(Role.COSTUMER)
-    )
-
     @Test
     fun `should create costumer and encrypt password`(){
         val initialPassword = Random().nextInt().toString()
@@ -111,7 +100,7 @@ class CostumerServiceTest {
     }
 
     @Test
-    fun `should throw error when costumer not found`(){
+    fun `should throw not found when find by id`(){
         val id = Random().nextInt()
 
         every { customerRepository.findById(id) } returns Optional.empty()
@@ -124,8 +113,103 @@ class CostumerServiceTest {
         assertEquals("ML201", error.errorCode)
         
         verify (exactly = 1){ customerRepository.findById(id) }
-        
+    }
+
+    @Test
+    fun `should update costumer`(){
+        val id = Random().nextInt()
+        val fakeCostumer = buildCustomer(id = id)
+
+        every { customerRepository.existsById(id) } returns true
+        every { customerRepository.save(fakeCostumer) } returns fakeCostumer
+
+        verify (exactly = 1){ customerRepository.existsById(id) }
+        verify (exactly = 1){ customerRepository.save(fakeCostumer) }
 
 
+        customerService.editCostumer(fakeCostumer)
+    }
+
+    @Test
+    fun `should throw not found exception when update costumer`(){
+        val id = Random().nextInt()
+        val fakeCostumer = buildCustomer(id = id)
+
+        every { customerRepository.existsById(id) } returns false
+        every { customerRepository.save(fakeCostumer) } returns fakeCostumer
+
+        val error = assertThrows<NotFoundException> {
+            customerService.editCostumer(fakeCostumer)
+        }
+
+        assertEquals("Costumer [${id}] not exist", error.message)
+        assertEquals("ML-201", error.errorCode)
+
+        verify(exactly = 1) { customerRepository.existsById(id) }
+        verify(exactly = 0) { customerRepository.save(any()) }
+    }
+
+    @Test
+    fun `should delete costumer`(){
+        val id = Random().nextInt()
+        val fakeCostumer = buildCustomer(id = id)
+        val expectedCostumer = fakeCostumer.copy(status = CostumerStatus.INATIVO)
+
+        every { customerService.returnById(id) } returns fakeCostumer
+        every { customerRepository.save(expectedCostumer) } returns expectedCostumer
+        every { bookService.deleteByCostumer(fakeCostumer) } just runs
+
+        customerService.deleteCostumer(id)
+
+        verify (exactly = 1){ customerService.returnById(id) }
+        verify (exactly = 1){ bookService.deleteByCostumer(fakeCostumer) }
+        verify (exactly = 1){ customerRepository.save(expectedCostumer) }
+
+    }
+
+    @Test
+    fun `should throw not found exception when delete costumer `(){
+        val id = Random().nextInt()
+
+        every { customerService.returnById(id) } throws NotFoundException(Errors.ML201.message.format(id),
+                                                                          Errors.ML201.code)
+
+        val error = assertThrows<NotFoundException> {
+            customerService.deleteCostumer(id)
+        }
+
+        assertEquals("Costumer [${id}] not exist", error.message)
+        assertEquals("ML-201", error.errorCode)
+
+        verify (exactly = 1){ customerService.returnById(id) }
+        verify (exactly = 0){ bookService.deleteByCostumer(any()) }
+        verify (exactly = 0){ customerRepository.save(any()) }
+
+    }
+
+    @Test
+    fun `should return true when email availeble`(){
+        val email = "${Random().nextInt().toString()}@email.com"
+
+        every { customerRepository.existsByEmail(email) } returns false
+
+        val emailAvailable = customerService.emailAvailable(email)
+
+        assertTrue(emailAvailable)
+
+        verify(exactly = 1) { customerRepository.existsByEmail(email) }
+    }
+
+    @Test
+    fun `should return false when email availeble`(){
+        val email = "${Random().nextInt()}@email.com"
+
+        every { customerRepository.existsByEmail(email) } returns true
+
+        val emailAvailable = customerService.emailAvailable(email)
+
+        assertFalse(emailAvailable)
+
+        verify(exactly = 1) { customerRepository.existsByEmail(email) }
     }
 }

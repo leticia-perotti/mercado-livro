@@ -40,7 +40,7 @@ class CostumerService (
 
     fun editCostumer(costumer: CostumerModel) {
         if (!costumerRepository.existsById(costumer.id!!)){
-            throw Exception()
+            throw NotFoundException(Errors.ML201.message.format(costumer.id), Errors.ML201.code)
         }
         costumerRepository.save(costumer)
     }
